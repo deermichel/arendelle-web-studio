@@ -1,0 +1,185 @@
+/* general */
+body {
+  background: #101012;
+  color: #efefef;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
+  margin: 0px;
+  padding: 0px;
+}
+a {
+  color: #efefef;
+  text-decoration: none;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-weight: normal;
+  margin: 0;
+}
+body, html {
+  height: 92%;
+  width: 100%;
+}
+::-webkit-scrollbar {
+	height: 8px;
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb:vertical,
+::-webkit-scrollbar-thumb:horizontal {
+	background: #505055;
+	-webkit-border-radius: 3px;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+
+/* header */
+header {
+  background: #202025;
+  border-bottom: 1px solid #ee00a4;
+  height: 50px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+#title {
+  font-size: 24px;
+  position: absolute;
+  text-align: center;
+  top: 9px;
+  width: 100%;
+}
+#controlbar {
+  margin: 0 auto;
+  position: absolute;
+  top: 9px;
+  width: 100%;
+}
+#controlbar .icon {
+  font-size: 24px;
+  float: right;
+  margin: 0 24px 0 0;
+  padding: 0 12px 0 12px;
+  transition: all .4s;
+}
+#controlbar .icon.left {
+  float: left;
+  margin: 0 0 0 24px;
+}
+#controlbar .icon:hover {
+  opacity: .7;
+}
+#controlbar.projects .ion-play,
+#controlbar.projects .ion-chevron-left {
+  display: none;
+}
+#controlbar.editor .ion-plus {
+  display: none;
+}
+
+/* content */
+main {
+  height: 100%;
+  margin-top: 70px;
+}
+#content {
+  height: 100%;
+  width: 100%;
+}
+.hidescrollbar {
+  background: #101012;
+  height: 100%;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 8px;
+  z-index: 1;
+}
+#tilescontainer {
+  height: 100%;
+  overflow: auto;
+}
+.tile {
+  display: inline-block;
+  float: left;
+  height: 200px;
+  margin: 0 0 1% 1%;
+  overflow: hidden;
+  position: relative;
+  width: 32%;
+}
+.tile img {
+  height: auto;
+  width: 100%;
+}
+.tile .tileoverlay {
+  background: rgba(0, 0, 0, 0.6);
+  font-size: 22px;
+  height: 100%;
+  line-height: 200px;
+  position: absolute;
+  text-align: center;
+  text-shadow: 0 0 10px #ffffff;
+  transition: all .4s;
+  vertical-align: middle;
+  width: 100%;
+  z-index: 1;
+}
+.tile .tileoverlay:hover {
+  line-height: 180px;
+  opacity: .7;
+}
+#edittext {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: #efefef;
+  display: none;
+  font-family: monospace;
+  font-size: 16px;
+  height: 100%;
+  line-height: 1.4;
+  margin: 0 auto;
+  outline: none;
+  overflow: auto;
+  padding: 0 .5% 0 .5%;
+  resize: none;
+  width: 99%;
+  word-break: break-all;
+}
+
+/* footer */
+footer {
+  bottom: 0px;
+  font-size: 12px;
+  position: fixed;
+  width: 100%;
+}
+#copyright {
+  margin-left: 1%;
+}
+
+
+/* responsive */
+@media screen and (max-width: 960px) {
+
+  .tile {
+    margin: 0 0 2% 2%;
+    width: 47%;
+  }
+
+}
+
+@media screen and (max-width: 480px) {
+
+  .tile {
+    margin: 0 0 3% 3%;
+    width: 94%;
+  }
+
+}

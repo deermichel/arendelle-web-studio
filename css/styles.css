@@ -74,11 +74,9 @@ header {
 #controlbar .icon:hover {
   opacity: .7;
 }
-#controlbar.projects .ion-play,
-#controlbar.projects .ion-chevron-left {
-  display: none;
-}
-#controlbar.editor .ion-plus {
+body.projects #controlbar .ion-play,
+body.projects #controlbar .ion-chevron-left,
+body.editor #controlbar .ion-plus {
   display: none;
 }
 
@@ -166,6 +164,9 @@ footer {
 
 
 /* responsive */
+
+/* TODO: scrollbar width */
+
 @media screen and (max-width: 960px) {
 
   .tile {

@@ -3,20 +3,26 @@ $(function() {
   /*$(".tile").css("display", "none");
   $(".tile").each(function(index) {
     $(this).delay(index * 200).fadeIn(1000);
-  });*/
+  }); --> CSS ANIMATION!*/
+
+  $("#content").click(function() {
+    //alert("did");
+    //var client = new Dropbox.Client({key: "nz8lcuw00q5zwzr"});
+    //client.authenticate();
+  });
 
   $("#tilescontainer").on("click", ".tile", function() {
-    $("#tilescontainer").fadeOut(500, function() {
-      $("#controlbar").attr("class", "editor");
-      $("#edittext").fadeIn(500);
-    });
+    $("#tilescontainer").velocity("fadeOut", {duration: 500, complete: function() {
+      $("body").attr("class", "editor");
+      $("#edittext").velocity("fadeIn", {duration: 500});
+    }});
   });
 
   $("#tilescontainer, #edittext").scroll(function() {
     $(".hidescrollbar").hide();
     clearTimeout($.data(this, "scrollCheck"));
     $.data(this, "scrollCheck", setTimeout(function() {
-      $(".hidescrollbar").fadeIn(500);
+      $(".hidescrollbar").velocity("fadeIn", {duration: 500});
     }, 500));
   });
 
@@ -33,16 +39,16 @@ $(function() {
       ).append(
         $("<img>").attr("src", "img/demo.jpg")
       )
-      .hide().fadeIn(1000)
+      .hide().velocity("fadeIn", {duration: 1000})
 
     );
   });
 
   $("#controlbar .ion-chevron-left").click(function() {
-    $("#edittext").fadeOut(500, function() {
-      $("#controlbar").attr("class", "projects");
-      $("#tilescontainer").fadeIn(500);
-    });
+    $("#edittext").velocity("fadeOut", {duration: 500, complete: function() {
+      $("body").attr("class", "projects");
+      $("#tilescontainer").velocity("fadeIn", {duration: 500});
+    }});
   });
 
 })

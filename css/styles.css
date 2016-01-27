@@ -61,6 +61,7 @@ header {
   width: 100%;
 }
 #controlbar .icon {
+  display: none;
   font-size: 24px;
   float: right;
   margin: 0 24px 0 0;
@@ -74,10 +75,10 @@ header {
 #controlbar .icon:hover {
   opacity: .7;
 }
-body.projects #controlbar .ion-play,
-body.projects #controlbar .ion-chevron-left,
-body.editor #controlbar .ion-plus {
-  display: none;
+body.projects #controlbar .ion-plus,
+body.editor #controlbar .ion-play,
+body.editor #controlbar .ion-chevron-left {
+  display: block;
 }
 
 /* content */

@@ -5,10 +5,68 @@ $(function() {
     $(this).delay(index * 200).fadeIn(1000);
   }); --> CSS ANIMATION!*/
 
-  $("#content").click(function() {
-    //alert("did");
-    //var client = new Dropbox.Client({key: "nz8lcuw00q5zwzr"});
-    //client.authenticate();
+  function sayHello() {
+
+    dropbox.getAccountInfo(function(error, info) {
+      if (error) {
+        alert(error);
+      } else {
+
+        $("#title").velocity({opacity: 0}, {duration: 500, complete: function() {
+          $("#title").html("Hello, " + info.name);
+          $("#title").velocity({opacity: 1}, {duration: 500})
+            .velocity({opacity: 0}, {delay: 1500, duration: 500, complete: function() {
+              $("#title").html("Arendelle Studio");
+              $("#title").velocity({opacity: 1}, {duration: 500});
+            }});
+        }});
+
+      }
+    });
+
+  }
+
+  function addProjectTile(title, preview) {
+
+    /*dropbox.makeUrl(title + "/.preview.png", {download: true}, function(error, result) {*/
+    dropbox.readFile(title + "/.preview.png", {blob: true}, function(error, data) {
+      if (error) {
+        alert(error);
+      } else {
+
+        $("#tilescontainer").append(
+          // "<div class='tile'><div class='tileoverlay'>Title</div><img src='img/demo.jpg'></div>"
+
+          $("<div>").attr("class", "tile").append(
+            $("<div>").attr("class", "tileoverlay").html(title)
+          ).append(
+            $("<img>").attr("src", URL.createObjectURL(data))
+          )
+          .hide().velocity("fadeIn", {duration: 1000})
+
+        );
+
+      }
+    });
+
+  }
+
+
+  // MAIN
+
+
+  authDropbox(function() {
+    dropbox.readdir("/", function(error, entries) {
+      if (error) {
+        alert(error);
+      } else {
+        $("body").attr("class", "projects");
+        for (var i = 0; i < entries.length; i++) {
+          addProjectTile(entries[i]);
+        }
+        sayHello();
+      }
+    });
   });
 
   $("#tilescontainer").on("click", ".tile", function() {
@@ -31,17 +89,7 @@ $(function() {
   });
 
   $("#controlbar .ion-plus").click(function() {
-    $("#tilescontainer").append(
-      // "<div class='tile'><div class='tileoverlay'>Title</div><img src='img/demo.jpg'></div>"
 
-      $("<div>").attr("class", "tile").append(
-        $("<div>").attr("class", "tileoverlay").html("Title")
-      ).append(
-        $("<img>").attr("src", "img/demo.jpg")
-      )
-      .hide().velocity("fadeIn", {duration: 1000})
-
-    );
   });
 
   $("#controlbar .ion-chevron-left").click(function() {
@@ -51,4 +99,17 @@ $(function() {
     }});
   });
 
-})
+});
+
+
+// APIs
+var dropbox = new Dropbox.Client({key: "nz8lcuw00q5zwzr"});
+function authDropbox(then) {
+  dropbox.authenticate(function(error, client) {
+    if (error) {
+      alert(error);
+    } else {
+      then();
+    }
+  });
+}

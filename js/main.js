@@ -31,8 +31,6 @@ $(function() {
 
   function addProjectTile(title, index) {
 
-    /*dropbox.makeUrl(title + "/.preview.png", {download: true}, function(error, result) {*/
-
     // create html
     var newTile =
       // "<div class='tile'><div class='tileoverlay'>Title</div><img src='img/demo.jpg'></div>"
@@ -46,12 +44,47 @@ $(function() {
 
     .appendTo("#tilescontainer");
 
+    // check if project is valid
+    dropbox.stat(title + "/project.config", function(error) {
+      if (error) {
+        if (error.status == 404) {
+          $(newTile).remove();
+        } else {
+          alert(error);
+        }
+      }
+    });
+
     // add preview images
+    /*dropbox.makeUrl(title + "/.preview.png", {download: true}, function(error, result) {*/
     dropbox.readFile(title + "/.preview.png", {blob: true}, function(error, data) {
       if (error) {
-        alert(error);
+        if (error.status != 404) alert(error);
       } else {
         $(newTile).find("img").attr("src", URL.createObjectURL(data)).velocity({opacity: 1}, {duration: 1000});
+      }
+    });
+
+  }
+
+  function openProject(title) {
+
+    currentProject = title;
+
+    // fade out project tiles and update controlbar
+    $("#tilescontainer").velocity("fadeOut", {duration: 400, complete: function() {
+      $("body").attr("class", "editor");
+      // TODO: fix sayHello() overwriting #title problem
+      $("#title").html(currentProject);
+    }});
+
+    // load project and open editor
+    dropbox.readFile(currentProject + "/main.arendelle", function(error, data) {
+      if (error) {
+        if (error.status != 404) alert(error);
+      } else {
+        $("#edittext").html(data);
+        $("#edittext").velocity("fadeIn", {duration: 400, delay: 400});
       }
     });
 
@@ -61,6 +94,7 @@ $(function() {
   // MAIN
 
 
+  // login to dropbox and load projects
   authDropbox(function() {
     dropbox.readdir("/", function(error, entries) {
       if (error) {
@@ -77,13 +111,7 @@ $(function() {
 
   // open project
   $("#tilescontainer").on("click", ".tile", function() {
-    currentProject = $(this).find(".tileoverlay").html();
-    $("#tilescontainer").velocity("fadeOut", {duration: 500, complete: function() {
-      $("body").attr("class", "editor");
-      $("#title").velocity("stop");
-      $("#title").html(currentProject);
-      $("#edittext").velocity("fadeIn", {duration: 500});
-    }});
+    openProject($(this).find(".tileoverlay").html());
   });
 
   $("#tilescontainer, #edittext").scroll(function() {

@@ -77,7 +77,8 @@ header {
 }
 body.projects #controlbar .ion-plus,
 body.editor #controlbar .ion-play,
-body.editor #controlbar .ion-chevron-left {
+body.editor #controlbar .ion-chevron-left,
+body.screen #controlbar .ion-chevron-left {
   display: block;
 }
 
@@ -114,6 +115,7 @@ main {
 }
 .tile img {
   height: auto;
+  opacity: 0;
   width: 100%;
 }
 .tile .tileoverlay {
@@ -150,6 +152,13 @@ main {
   resize: none;
   width: 99%;
   word-break: break-all;
+}
+#screen {
+  background: black;
+  display: none;
+  height: 100%;
+  padding: 0 .5% 0 .5%;
+  width: 99%;
 }
 
 /* footer */

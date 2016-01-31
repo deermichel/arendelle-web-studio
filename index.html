@@ -9,6 +9,7 @@
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta name="author" content="">
+    <link rel="canonical" href="https://arendelle.org/studio">
 
     <!-- favicon -->
 
@@ -20,13 +21,14 @@
   </head>
   <body class="login">
 
+    <!-- TODO: add <noscript> -->
+
     <!-- header -->
     <header>
       <span id="title">Arendelle Studio</span>
       <div id="controlbar">
         <i class="icon ion-plus"></i>
         <i class="icon ion-play"></i>
-        <i class="icon ion-chevron-left left"></i>
       </div>
     </header>
 
@@ -40,7 +42,10 @@
         <div id="tilescontainer"></div>
 
         <!-- editor -->
-        <textarea id="edittext"></textarea>
+        <div id="editorcontainer">
+          <div id="filebrowser"></div>
+          <div id="edittext"></div>
+        </div>
 
         <!-- screen -->
         <canvas id="screen"></canvas>
@@ -56,6 +61,7 @@
     <!-- scripts -->
     <script src="js/jquery.js"></script>
     <script src="js/velocity.js"></script>
+    <script src="js/ace/ace.js"></script>
     <script src="js/dropbox.js"></script>
     <script src="js/main.js"></script>
 

@@ -1,11 +1,18 @@
+// enforce https
+// TODO: remove debug localhost
+if (window.location.host != "127.0.0.1:3000" && window.location.protocol != "https:") {
+  window.location.protocol = "https:" + window.location.href.substring(window.location.protocol.length);
+}
+
+
 $(function() {
 
-  /*$(".tile").css("display", "none");
-  $(".tile").each(function(index) {
-    $(this).delay(index * 200).fadeIn(1000);
-  }); --> CSS ANIMATION!*/
-
   var currentProject = "";
+
+  var aceEditor = ace.edit("edittext");
+  aceEditor.setTheme("ace/theme/vibrant_ink");
+  aceEditor.$blockScrolling = Infinity;
+  // aceEditor.getSession().setMode("ace/mode/arendelle");
 
 
   function sayHello() {
@@ -83,8 +90,12 @@ $(function() {
       if (error) {
         if (error.status != 404) alert(error);
       } else {
-        $("#edittext").html(data);
-        $("#edittext").velocity("fadeIn", {duration: 400, delay: 400});
+        // $("#edittext").html(data);
+        aceEditor.setValue(data, -1);
+        $("#editorcontainer").velocity("fadeIn", {duration: 400, delay: 400, complete: function() {
+          aceEditor.resize();
+          aceEditor.focus();
+        }});
       }
     });
 
@@ -112,15 +123,24 @@ $(function() {
   // open project
   $("#tilescontainer").on("click", ".tile", function() {
     openProject($(this).find(".tileoverlay").html());
+
+    // change state
+    history.pushState({
+      mode: "editor",
+      project: currentProject
+    }, null, "");
+
   });
 
-  $("#tilescontainer, #edittext").scroll(function() {
+  function showScrollbar() {
     $(".hidescrollbar").hide();
-    clearTimeout($.data(this, "scrollCheck"));
-    $.data(this, "scrollCheck", setTimeout(function() {
+    clearTimeout($.data(window.document, "scrollCheck"));
+    $.data(window.document, "scrollCheck", setTimeout(function() {
       $(".hidescrollbar").velocity("fadeIn", {duration: 500});
     }, 500));
-  });
+  }
+  $("#tilescontainer").scroll(showScrollbar);
+  aceEditor.getSession().on("changeScrollTop", showScrollbar);
 
   $(".hidescrollbar").hover(function() {
     $(".hidescrollbar").hide();
@@ -130,37 +150,59 @@ $(function() {
 
   });
 
-  // go back
-  $("#controlbar .ion-chevron-left").click(function() {
-
-    // from editor to project overview
-    if ($("body").hasClass("editor")) {
-      $("#edittext").velocity("fadeOut", {duration: 500, complete: function() {
-        $("body").attr("class", "projects");
-        $("#title").html("Arendelle Studio");
-        $("#tilescontainer").velocity("fadeIn", {duration: 500});
-      }});
-    }
-
-    // from screen to editor
-    else if ($("body").hasClass("screen")) {
-      $("#screen").velocity("fadeOut", {duration: 500, complete: function() {
-        $("body").attr("class", "editor");
-        $("#title").html(currentProject);
-        $("#edittext").velocity("fadeIn", {duration: 500});
-      }});
-    }
-
-  });
-
   // run project
   $("#controlbar .ion-play").click(function() {
 
-    $("#edittext").velocity("fadeOut", {duration: 500, complete: function() {
+    $("#editorcontainer").velocity("fadeOut", {duration: 500, complete: function() {
+
+      // change state
+      history.pushState({
+        mode: "screen",
+        project: currentProject
+      }, null, "");
+
       $("body").attr("class", "screen");
       $("#screen").velocity("fadeIn", {duration: 500});
       // TODO: insert engine here
+
     }});
+
+  });
+
+  // history changes
+  $(window).on("popstate", function(e) {
+
+    var state = e.originalEvent.state;
+    console.log(state);
+    if (state) {
+
+      // from project overview to editor
+      if (state.mode == "editor" && $("body").hasClass("projects")) {
+        openProject(state.project);
+      }
+
+      // from screen to editor
+      if (state.mode == "editor" && $("body").hasClass("screen")) {
+        $("#screen").velocity("fadeOut", {duration: 500, complete: function() {
+          $("body").attr("class", "editor");
+          $("#title").html(currentProject);
+          $("#editorcontainer").velocity("fadeIn", {duration: 500});
+        }});
+      }
+
+    } else {
+
+      // from editor to project overview
+      if ($("body").hasClass("editor")) {
+        aceEditor.setValue("");
+        $("#editorcontainer").velocity("fadeOut", {duration: 500, complete: function() {
+          $("body").attr("class", "projects");
+          $("#title").html("Arendelle Studio");
+          $("#tilescontainer").velocity("fadeIn", {duration: 500});
+        }});
+      }
+
+    }
 
   });
 

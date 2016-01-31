@@ -76,9 +76,7 @@ header {
   opacity: .7;
 }
 body.projects #controlbar .ion-plus,
-body.editor #controlbar .ion-play,
-body.editor #controlbar .ion-chevron-left,
-body.screen #controlbar .ion-chevron-left {
+body.editor #controlbar .ion-play {
   display: block;
 }
 
@@ -135,14 +133,36 @@ main {
   line-height: 180px;
   opacity: .7;
 }
+#editorcontainer {
+  display: none;
+}
+#filebrowser {
+  background: #222;
+  bottom: 21px;
+  left: 0;
+  position: absolute;
+  right: 80%;
+  top: 70px;
+  z-index: 10;
+}
 #edittext {
-  background: transparent;
+  bottom: 21px;
+  font-size: 14px;
+  left: 20%;
+  position: absolute;
+  right: 0;
+  top: 70px;
+  z-index: 0;
+}
+/*#edittext {
+  background: #333;
   border: none;
   box-shadow: none;
   color: #efefef;
   display: none;
   font-family: monospace;
   font-size: 16px;
+  float: right;
   height: 100%;
   line-height: 1.4;
   margin: 0 auto;
@@ -150,9 +170,9 @@ main {
   overflow: auto;
   padding: 0 .5% 0 .5%;
   resize: none;
-  width: 99%;
+  width: 80%;
   word-break: break-all;
-}
+}*/
 #screen {
   background: black;
   display: none;

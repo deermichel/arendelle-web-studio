@@ -1,3 +1,5 @@
+// TODO: remove all console.log()
+
 // enforce https
 // TODO: remove debug localhost
 if (window.location.host != "127.0.0.1:3000" && window.location.protocol != "https:") {
@@ -13,6 +15,10 @@ $(function() {
   aceEditor.setTheme("ace/theme/vibrant_ink");
   aceEditor.$blockScrolling = Infinity;
   // aceEditor.getSession().setMode("ace/mode/arendelle");
+
+  history.replaceState({
+    mode: "projects"
+  }, null, "");
 
 
   function sayHello() {
@@ -90,6 +96,9 @@ $(function() {
       if (error) {
         if (error.status != 404) alert(error);
       } else {
+
+        // loadFileSystem();
+
         // $("#edittext").html(data);
         aceEditor.setValue(data, -1);
         $("#editorcontainer").velocity("fadeIn", {duration: 400, delay: 400, complete: function() {
@@ -99,6 +108,45 @@ $(function() {
       }
     });
 
+  }
+
+  function runProject() {
+
+    $("#editorcontainer").velocity("fadeOut", {duration: 500, complete: function() {
+      $("body").attr("class", "screen");
+      $("#screen").velocity("fadeIn", {duration: 500});
+      // TODO: insert engine here
+    }});
+
+  }
+
+  function loadFileSystem() {
+
+    var fileSystem = new Arendelle.FileSystem.Directory("/", currentProject);
+
+    dropbox.readdir(currentProject, function(error, entries, folderStat, entriesStat) {
+      if (error) {
+        alert(error);
+      } else {
+
+        for (var i = 0; i < entries.length; i++) {
+
+          if (entriesStat[i].isFolder) {
+
+
+
+          } else {
+
+
+
+          }
+
+        }
+
+      }
+    });
+
+    return fileSystem;
   }
 
 
@@ -120,6 +168,9 @@ $(function() {
     });
   });
 
+  // create project
+  $("#controlbar .ion-plus").click(function() {});
+
   // open project
   $("#tilescontainer").on("click", ".tile", function() {
     openProject($(this).find(".tileoverlay").html());
@@ -132,6 +183,19 @@ $(function() {
 
   });
 
+  // run project
+  $("#controlbar .ion-play").click(function() {
+    runProject();
+
+    // change state
+    history.pushState({
+      mode: "screen",
+      project: currentProject
+    }, null, "");
+
+  });
+
+  // scrollbar
   function showScrollbar() {
     $(".hidescrollbar").hide();
     clearTimeout($.data(window.document, "scrollCheck"));
@@ -141,32 +205,8 @@ $(function() {
   }
   $("#tilescontainer").scroll(showScrollbar);
   aceEditor.getSession().on("changeScrollTop", showScrollbar);
-
   $(".hidescrollbar").hover(function() {
     $(".hidescrollbar").hide();
-  });
-
-  $("#controlbar .ion-plus").click(function() {
-
-  });
-
-  // run project
-  $("#controlbar .ion-play").click(function() {
-
-    $("#editorcontainer").velocity("fadeOut", {duration: 500, complete: function() {
-
-      // change state
-      history.pushState({
-        mode: "screen",
-        project: currentProject
-      }, null, "");
-
-      $("body").attr("class", "screen");
-      $("#screen").velocity("fadeIn", {duration: 500});
-      // TODO: insert engine here
-
-    }});
-
   });
 
   // history changes
@@ -176,29 +216,35 @@ $(function() {
     console.log(state);
     if (state) {
 
-      // from project overview to editor
-      if (state.mode == "editor" && $("body").hasClass("projects")) {
-        openProject(state.project);
-      }
-
-      // from screen to editor
-      if (state.mode == "editor" && $("body").hasClass("screen")) {
-        $("#screen").velocity("fadeOut", {duration: 500, complete: function() {
-          $("body").attr("class", "editor");
-          $("#title").html(currentProject);
-          $("#editorcontainer").velocity("fadeIn", {duration: 500});
-        }});
-      }
-
-    } else {
-
-      // from editor to project overview
-      if ($("body").hasClass("editor")) {
+      // editor -> projects
+      if (state.mode == "projects" && $("body").hasClass("editor")) {
         aceEditor.setValue("");
         $("#editorcontainer").velocity("fadeOut", {duration: 500, complete: function() {
           $("body").attr("class", "projects");
           $("#title").html("Arendelle Studio");
           $("#tilescontainer").velocity("fadeIn", {duration: 500});
+        }});
+      }
+
+      // editor -> screen
+      if (state.mode == "screen" && $("body").hasClass("editor")) {
+        runProject();
+      }
+
+      // projects -> editor
+      if (state.mode == "editor" && $("body").hasClass("projects")) {
+        openProject(state.project);
+      }
+
+      // screen -> editor
+      if (state.mode == "editor" && $("body").hasClass("screen")) {
+        $("#screen").velocity("fadeOut", {duration: 500, complete: function() {
+          $("body").attr("class", "editor");
+          $("#title").html(currentProject);
+          $("#editorcontainer").velocity("fadeIn", {duration: 500, complete: function() {
+            aceEditor.resize();
+            aceEditor.focus();
+          }});
         }});
       }
 

@@ -10,10 +10,12 @@ if (window.location.host != "127.0.0.1:3000" && window.location.protocol != "htt
 $(function() {
 
   var currentProject = "";
+  var fileSystem;
 
   var aceEditor = ace.edit("edittext");
   aceEditor.setTheme("ace/theme/vibrant_ink");
   aceEditor.$blockScrolling = Infinity;
+  aceEditor.setOption("wrap", true);
   // aceEditor.getSession().setMode("ace/mode/arendelle");
 
   history.replaceState({
@@ -97,7 +99,7 @@ $(function() {
         if (error.status != 404) alert(error);
       } else {
 
-        // loadFileSystem();
+        loadFileSystem();
 
         // $("#edittext").html(data);
         aceEditor.setValue(data, -1);
@@ -122,9 +124,13 @@ $(function() {
 
   function loadFileSystem() {
 
-    var fileSystem = new Arendelle.FileSystem.Directory("/", currentProject);
+    fileSystem = new Arendelle.Directory("", currentProject);
+    loadFolderIntoFileSystem(fileSystem);
 
-    dropbox.readdir(currentProject, function(error, entries, folderStat, entriesStat) {
+  }
+  function loadFolderIntoFileSystem(folder) {
+
+    dropbox.readdir(currentProject + "/" + folder.Path, function(error, entries, folderStat, entriesStat) {
       if (error) {
         alert(error);
       } else {
@@ -133,11 +139,15 @@ $(function() {
 
           if (entriesStat[i].isFolder) {
 
-
+            // folder
+            var newFolder = new Arendelle.Directory(folder.Path + "/" + entries[i], entries[i]);
+            folder.AppendFileObject(newFolder);
+            loadFolderIntoFileSystem(newFolder);
 
           } else {
 
-
+            // file
+            loadFileIntoFileSystem(entries[i], folder);
 
           }
 
@@ -146,7 +156,33 @@ $(function() {
       }
     });
 
-    return fileSystem;
+  }
+  function loadFileIntoFileSystem(name, folder) {
+
+    var fileType = name.split(".")[1];
+    var space;
+    if (fileType == "arendelle") {
+      space = false;
+    } else if (fileType == "space") {
+      space = true;
+    } else {
+      return; // unsupported filetype
+    }
+
+    dropbox.readFile(currentProject + "/" + folder.Path + "/" + name, function(error, data) {
+      if (error) {
+        alert(error);
+      } else {
+        var path = folder.Path.replace(/^\//, ''); // TODO: remove
+        var file = new Arendelle.File(name.split(".")[0], path, data, space);
+        folder.AppendFileObject(file);
+        refreshFileBrowser();
+      }
+    });
+
+  }
+  function refreshFileBrowser() {
+    console.log(fileSystem);
   }
 
 
@@ -213,7 +249,7 @@ $(function() {
   $(window).on("popstate", function(e) {
 
     var state = e.originalEvent.state;
-    console.log(state);
+    // console.log(state);
     if (state) {
 
       // editor -> projects

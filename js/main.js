@@ -1,4 +1,5 @@
 // TODO: remove all console.log()
+// TODO: faster animations
 
 // enforce https
 // TODO: remove debug localhost
@@ -231,22 +232,10 @@ $(function() {
 
   });
 
-  // scrollbar
-  function showScrollbar() {
-    $(".hidescrollbar").hide();
-    clearTimeout($.data(window.document, "scrollCheck"));
-    $.data(window.document, "scrollCheck", setTimeout(function() {
-      $(".hidescrollbar").velocity("fadeIn", {duration: 500});
-    }, 500));
-  }
-  $("#tilescontainer").scroll(showScrollbar);
-  aceEditor.getSession().on("changeScrollTop", showScrollbar);
-  $(".hidescrollbar").hover(function() {
-    $(".hidescrollbar").hide();
-  });
-
   // history changes
   $(window).on("popstate", function(e) {
+
+    // TODO: universal fade out -> body; specific fade in (less code)
 
     var state = e.originalEvent.state;
     // console.log(state);

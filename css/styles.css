@@ -16,10 +16,6 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: normal;
   margin: 0;
 }
-body, html {
-  height: 92%;
-  width: 100%;
-}
 ::-webkit-scrollbar {
 	height: 8px;
   width: 8px;
@@ -42,6 +38,7 @@ header {
   background: #202025;
   border-bottom: 1px solid #ee00a4;
   height: 50px;
+  left: 0;
   position: fixed;
   top: 0;
   width: 100%;
@@ -66,7 +63,7 @@ header {
   float: right;
   margin: 0 24px 0 0;
   padding: 0 12px 0 12px;
-  transition: all .4s;
+  transition: all .3s;
 }
 #controlbar .icon.left {
   float: left;
@@ -81,26 +78,11 @@ body.editor #controlbar .ion-play {
 }
 
 /* content */
-main {
-  height: 100%;
-  margin-top: 70px;
-}
 #content {
-  height: 100%;
+  margin-top: 70px;
   width: 100%;
 }
-.hidescrollbar {
-  background: #101012;
-  height: 100%;
-  position: fixed;
-  right: 0;
-  top: 0;
-  width: 8px;
-  z-index: 1;
-}
 #tilescontainer {
-  height: 100%;
-  overflow: auto;
 }
 .tile {
   display: inline-block;
@@ -124,7 +106,7 @@ main {
   position: absolute;
   text-align: center;
   text-shadow: 0 0 10px #ffffff;
-  transition: all .4s;
+  transition: all .3s;
   vertical-align: middle;
   width: 100%;
   z-index: 1;
@@ -135,48 +117,25 @@ main {
 }
 #editorcontainer {
   display: none;
+  height: calc(100vh - 70px - 20px);
 }
 #filebrowser {
   background: #222;
-  bottom: 21px;
-  left: 0;
-  position: absolute;
-  right: 80%;
-  top: 70px;
-  z-index: 10;
+  height: 100%;
+  float: left;
+  overflow: auto;
+  width: 20%;
 }
 #edittext {
-  bottom: 21px;
-  font-size: 14px;
-  left: 20%;
-  position: absolute;
-  right: 0;
-  top: 70px;
-  z-index: 0;
-}
-/*#edittext {
-  background: #333;
-  border: none;
-  box-shadow: none;
-  color: #efefef;
-  display: none;
-  font-family: monospace;
-  font-size: 16px;
   float: right;
+  font-size: 14px;
   height: 100%;
-  line-height: 1.4;
-  margin: 0 auto;
-  outline: none;
-  overflow: auto;
-  padding: 0 .5% 0 .5%;
-  resize: none;
   width: 80%;
-  word-break: break-all;
-}*/
+}
 #screen {
   background: black;
   display: none;
-  height: 100%;
+  height: calc(100vh - 70px - 20px);
   padding: 0 .5% 0 .5%;
   width: 99%;
 }
@@ -185,8 +144,10 @@ main {
 footer {
   bottom: 0px;
   font-size: 12px;
+  left: 0;
   position: fixed;
   width: 100%;
+  z-index: 10;
 }
 #copyright {
   margin-left: 1%;
@@ -194,9 +155,6 @@ footer {
 
 
 /* responsive */
-
-/* TODO: scrollbar width */
-
 @media screen and (max-width: 960px) {
 
   .tile {
